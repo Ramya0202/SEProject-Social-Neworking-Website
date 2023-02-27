@@ -208,8 +208,8 @@ const Authentication = () => {
           }}
         >
           {isSignUp
-            ? "Already have an account Login"
-            : "Don't have an account Sign up"}
+            ? "Already have an account? Login"
+            : "Don't have an account? Sign up"}
         </span>
       </div>
 
