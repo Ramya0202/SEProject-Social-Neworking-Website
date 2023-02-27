@@ -34,9 +34,11 @@ export const getTimelineContent = async (req, res) => {
     const department = req.body.department;
     const yearOfStudy = req.body.yearOfStudy;
     const id = req.body.id;
+    const loggedInUser = req.body.loggedInUser;
 
     let query = {};
     let contentquery = {};
+    let publicContentQuery = {};
     if (id !== "") {
       contentquery.userId = { $in: id };
     }
@@ -50,9 +52,25 @@ export const getTimelineContent = async (req, res) => {
       query.users = { $in: userIds };
     }
 
+    console.log({ loggedInUser });
+
+    if (loggedInUser) {
+      const users = await UserModel.find({
+        $or: [
+          { _id: { $eq: loggedInUser }, accountType: "private" },
+          { accountType: "public" },
+        ],
+      });
+
+      const userIds = users.map((user) => user._id);
+      console.log({ userIds });
+      publicContentQuery.users = { $in: userIds };
+    }
+
     const timelineContents = await ContentModel.find({
       ...contentquery,
       ...query,
+      ...publicContentQuery,
     }).populate("users");
 
     for (const content of timelineContents) {

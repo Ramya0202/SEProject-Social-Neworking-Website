@@ -176,7 +176,7 @@ const Authentication = () => {
           {isSignUp && !isValidEmail && (
             <div>
               <span className="valid-password-text">
-                You cannot register with the personal email account
+                You cannot register with this email account
               </span>
             </div>
           )}
@@ -208,8 +208,8 @@ const Authentication = () => {
           }}
         >
           {isSignUp
-            ? "Already have an account? Login"
-            : "Don't have an account? Sign up"}
+            ? "Already have an account Login"
+            : "Don't have an account Sign up"}
         </span>
       </div>
 

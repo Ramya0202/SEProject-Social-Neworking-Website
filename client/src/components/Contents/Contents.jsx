@@ -20,12 +20,14 @@ const Contents = () => {
   let { content, loading, isOpen } = useSelector(
     (state) => state.contentReducer
   );
+  const user = useSelector((state) => state.authReducer.data?.user);
 
   useEffect(() => {
     const payload = {
       id: "",
       department: "",
       yearOfStudy: "",
+      loggedInUser: user?._id,
     };
     dispatch(getTimeline(payload));
   }, []);
@@ -45,6 +47,7 @@ const Contents = () => {
       id: "",
       course: department,
       yearOfStudy: yearOfStudy,
+      loggedInUser: user?._id,
     };
     dispatch(getTimeline(payload));
     dispatch(openFilterModal(false));

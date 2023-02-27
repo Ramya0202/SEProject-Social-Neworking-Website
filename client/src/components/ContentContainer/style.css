@@ -266,7 +266,14 @@
   font-size: 12px;
   font-weight: bold;
 }
+.CommenterUsername {
+  font-family: "Poppins";
+  font-size: 12px;
+}
 .CommenterValue {
   font-family: "Poppins";
   font-size: 12px;
+}
+.CommentsContainer {
+  margin-top: 1rem;
 }
