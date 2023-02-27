@@ -28,7 +28,7 @@ const Authentication = () => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
 
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#\$%\^&\*]).{8,}$/;
   const emailRegex = /^[^\s@]+@albany\.edu$/i;
 
   const resetForm = () => {
