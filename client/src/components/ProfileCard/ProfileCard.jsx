@@ -12,10 +12,17 @@ import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { logout, updateUser } from "../../redux/action/AuthActions";
 import { bucket } from "../../redux/action/BucketAction";
-import { AiFillFilter, AiOutlineEdit, AiOutlineLogout } from "react-icons/ai";
+import {
+  AiFillFilter,
+  AiOutlineEdit,
+  AiOutlineLogout,
+  AiOutlineSetting,
+} from "react-icons/ai";
 import { Form, Input, Modal, Radio, Select, Space } from "antd";
 import { getTimeline, openFilterModal } from "../../redux/action/ContentAction";
 import axios from "axios";
+import { HiLockClosed, HiOutlineLockClosed } from "react-icons/hi2";
+import Toggle from "react-toggle";
 
 const ProfileCard = ({ location }) => {
   const user = useSelector((state) => state.authReducer.data?.user);
@@ -29,6 +36,7 @@ const ProfileCard = ({ location }) => {
   const [department, setDepartment] = useState("");
   const [yearOfStudy, setYearOfStudy] = useState("");
   const [contentCount, setContentCount] = useState(0);
+  const [accountType, setAccountType] = useState("public");
   const { Option } = Select;
 
   const dispatch = useDispatch();
@@ -113,6 +121,7 @@ const ProfileCard = ({ location }) => {
         ...UserData,
         course: department,
         yearOfStudy: yearOfStudy,
+        accountType: accountType,
       })
     );
     setIsVisible(false);
@@ -137,12 +146,17 @@ const ProfileCard = ({ location }) => {
           : "",
       department: "",
       yearOfStudy: "",
+      loggedInUser: user?._id,
     };
     dispatch(getTimeline(payload));
   };
 
   const showDrawer = () => {
     dispatch(openFilterModal(true));
+  };
+
+  const handlePrivateChange = (value) => {
+    setAccountType(value);
   };
 
   return (
@@ -182,7 +196,7 @@ const ProfileCard = ({ location }) => {
       <div className="ProfileCard">
         <div className="ProfileTopBox">
           <div onClick={() => setIsVisible(true)} className="EditProfileIcon">
-            <AiOutlineEdit size={20} color="#fff" />
+            <AiOutlineSetting size={20} color="#fff" />
           </div>
           <div onClick={handleSignOut} className="SignOutProfileIcon">
             <AiOutlineLogout size={20} color="#fff" />
@@ -234,19 +248,68 @@ const ProfileCard = ({ location }) => {
         okText="Update"
       >
         <Form className="infoForm">
-          <label for="file-upload" class="custom-file-upload">
-            <img
-              alt="profile"
-              src={
-                profileImageUrl
-                  ? profileImageUrl
-                  : formData.profilePicture
-                  ? BUCKET_URI + formData.profilePicture
-                  : Images.IMAGE_EDIT
-              }
-              style={{ height: "100%", width: "100%", borderRadius: "50%" }}
-            />
-          </label>
+          <div className="ProfileTopContainer">
+            <label for="file-upload" class="custom-file-upload">
+              <img
+                alt="profile"
+                src={
+                  profileImageUrl
+                    ? profileImageUrl
+                    : formData.profilePicture
+                    ? BUCKET_URI + formData.profilePicture
+                    : Images.IMAGE_EDIT
+                }
+                style={{ height: "100%", width: "100%", borderRadius: "50%" }}
+              />
+            </label>
+            <div
+              style={{
+                width: "40%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
+              <div className="LockIconContainer">
+                <div
+                  style={{
+                    borderColor:
+                      accountType === "private" ? "#bf40bf" : "black",
+                  }}
+                  className="LockIconCircle"
+                >
+                  <HiOutlineLockClosed
+                    color={accountType === "private" ? "#bf40bf" : "black"}
+                    size={25}
+                  />
+                </div>
+                <div>
+                  <Select
+                    defaultValue={accountType}
+                    style={{
+                      width: 120,
+                    }}
+                    onChange={handlePrivateChange}
+                    options={[
+                      {
+                        value: "private",
+                        label: "Private",
+                      },
+                      {
+                        value: "public",
+                        label: "Public",
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+              <span style={{ textAlign: "center", fontWeight: "bold" }}>
+                This Account is{" "}
+                {accountType === "private" ? "Private" : "Public"}
+              </span>
+            </div>
+          </div>
+
           <input
             onChange={onImageChange}
             id="file-upload"

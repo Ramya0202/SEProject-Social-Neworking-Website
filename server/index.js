@@ -10,7 +10,6 @@ import UserRoute from "./src/routes/user/index.js";
 import BucketRoute from "./src/routes/bucket/index.js";
 import ContentRoute from "./src/routes/content/index.js";
 
-
 const app = express();
 
 // middleware

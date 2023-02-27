@@ -30,6 +30,7 @@ export default function ContentShare() {
       id: "",
       department: "",
       yearOfStudy: "",
+      loggedInUser: user?._id,
     };
     dispatch(getTimeline(payload));
   }, []);
@@ -94,6 +95,7 @@ export default function ContentShare() {
             id: "",
             department: "",
             yearOfStudy: "",
+            loggedInUser: user?._id,
           };
           dispatch(getTimeline(payload));
           messageApi.destroy();

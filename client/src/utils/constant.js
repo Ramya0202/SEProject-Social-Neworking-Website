@@ -37,23 +37,15 @@ const YEAR_OF_STUDY = [
 const DEPARTMENT = [
   {
     id: 1,
-    name: "Computer Science",
+    name: "Software Engineering",
   },
   {
     id: 2,
-    name: "Data Science",
+    name: "Medicine",
   },
   {
     id: 3,
-    name: "Cyber Security",
-  },
-  {
-    id: 4,
-    name: "Information Science",
-  },
-  {
-    id: 5,
-    name: "Electrical and Computer Engineering",
+    name: "Studies of Law",
   },
 ];
 

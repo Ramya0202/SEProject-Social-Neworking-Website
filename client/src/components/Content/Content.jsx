@@ -22,6 +22,7 @@ import { likeOrDislike } from "../../services/Content";
 import { API_URI, BUCKET_URI } from "../../utils/constant";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
 import _ from "lodash";
+import Collapsible from "react-collapsible";
 
 export default function Content({ content }) {
   const videoJsOptions = {
@@ -51,6 +52,8 @@ export default function Content({ content }) {
   const [description, setDescription] = useState(content?.desc);
   const [contentVideo, setContentVideo] = useState(BUCKET_URI + content?.video);
   const [commentCount, setCommentCount] = useState(content?.comments?.length);
+  const [isCommentOpen, setIsCommentOpen] = useState(false);
+  const [comments, setComments] = useState(content?.comments);
 
   const onConfirm = () => {
     messageApi.open({
@@ -71,6 +74,7 @@ export default function Content({ content }) {
           id: "",
           department: "",
           yearOfStudy: "",
+          loggedInUser: user?._id,
         };
         dispatch(getTimeline(payload));
         messageApi.destroy();
@@ -186,6 +190,7 @@ export default function Content({ content }) {
             id: "",
             department: "",
             yearOfStudy: "",
+            loggedInUser: user?._id,
           };
           dispatch(getTimeline(payload));
           messageApi.destroy();
@@ -219,8 +224,21 @@ export default function Content({ content }) {
         headers: { "Access-Control-Allow-Origin": "*" },
       })
       .then((res) => {
+        console.log({ res });
         setCommentCount((prev) => prev + 1);
+
+        console.log({ comments });
+        const imeComment = [
+          {
+            comment: comment.current.value,
+            user: {
+              profilePicture: user?.profilePicture,
+              username: user?.username,
+            },
+          },
+        ];
         comment.current.value = "";
+        setComments([...comments, ...imeComment]);
       })
       .catch((error) => {
         messageApi.open({
@@ -260,6 +278,10 @@ export default function Content({ content }) {
     } else {
       return false;
     }
+  };
+
+  const handleCommentExpand = () => {
+    setIsCommentOpen(!isCommentOpen);
   };
 
   return (
@@ -312,29 +334,64 @@ export default function Content({ content }) {
         />
       )}
 
-      <div className="like-row">
-        <div className="LikeRow">
-          <div onClick={handleLike} className="postReact">
-            {liked ? (
-              <AiFillLike
-                style={{ cursor: "pointer" }}
-                size={24}
-                color="#246ee9"
-              />
-            ) : (
-              <AiOutlineLike style={{ cursor: "pointer" }} size={24} />
-            )}
-          </div>
-          <span className="like-text">{likes} likes</span>
-        </div>
-
-        <div onClick={handleCommentOpen} className="CommentRow">
+      {/* <div onClick={handleCommentOpen} className="CommentRow">
           <div className="postReact">
             <AiOutlineComment style={{ cursor: "pointer" }} size={24} />
           </div>
           <span className="like-text">{commentCount} Comments</span>
+        </div> */}
+
+      <Collapsible
+        trigger={
+          <div className="like-row">
+            <div className="LikeRow">
+              <div onClick={handleLike} className="postReact">
+                {liked ? (
+                  <AiFillLike
+                    style={{ cursor: "pointer" }}
+                    size={24}
+                    color="#246ee9"
+                  />
+                ) : (
+                  <AiOutlineLike style={{ cursor: "pointer" }} size={24} />
+                )}
+              </div>
+              <span className="like-text">{likes} likes</span>
+            </div>
+            <div className="CommentRow" onClick={handleCommentExpand}>
+              <div className="postReact">
+                <AiOutlineComment style={{ cursor: "pointer" }} size={24} />
+              </div>
+              <span className="like-text">{commentCount} Comments</span>
+            </div>
+          </div>
+        }
+        open={isCommentOpen}
+      >
+        <div className="CommentsContainer">
+          {_.isEmpty(comments) ? (
+            <span>No Comments</span>
+          ) : (
+            comments?.map((com, index) => (
+              <div key={index} className="CommentView">
+                <img
+                  src={
+                    com.user?.profilePicture
+                      ? BUCKET_URI + com.user?.profilePicture
+                      : Images.DEFAULT_PROFILE
+                  }
+                  alt="profile"
+                  className="commentProfile"
+                />
+                <div className="CommentBackground">
+                  <span className="CommenterName">{com.user?.username}</span>
+                  <span className="CommenterValue">{com?.comment}</span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-      </div>
+      </Collapsible>
 
       <div className="CommentSection">
         <img

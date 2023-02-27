@@ -50,6 +50,11 @@ const UserSchema = mongoose.Schema(
       type: String,
       require: false,
     },
+    accountType: {
+      type: String,
+      require: false,
+      default: "public",
+    },
     emergencyContactNumber: {
       type: String,
       require: false,
