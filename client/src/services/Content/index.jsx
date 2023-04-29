@@ -28,3 +28,12 @@ export const likeOrDislike = (id, userId) =>
     { userId: userId },
     { headers: { "Access-Control-Allow-Origin": "*" } }
   );
+export const saveContent = (body) =>
+  API.post(`/content/savecontent`, body, {
+    headers: { "Access-Control-Allow-Origin": "*" },
+  });
+
+export const archiveContent = (body) =>
+  API.post(`/content/archivecontent`, body, {
+    headers: { "Access-Control-Allow-Origin": "*" },
+  });
