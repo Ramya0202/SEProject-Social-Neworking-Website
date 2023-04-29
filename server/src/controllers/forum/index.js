@@ -36,7 +36,7 @@ export const answer = async (req, res) => {
     res.status(200).json(question);
   } catch (error) {
     console.log(error);
-    return res.status(500).json("Internal server error");
+    return res.status(500).json("Internal server error");//Error message is displayed
   }
 };
 
