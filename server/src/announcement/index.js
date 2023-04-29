@@ -25,7 +25,7 @@ export const createAnnouncement = async (req, res) => {
 export const getAllAnnouncements = async (req, res) => {
   try {
     const announcements = await AnnouncementModel.find().populate("users");
-
+//sending response
     res.status(200).json({
       success: true,
       data: announcements,
