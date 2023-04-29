@@ -26,3 +26,6 @@
 .nav-icon {
   color: #242d49;
 }
+.custom-antd-list {
+  align-items: center !important ;
+}
