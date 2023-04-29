@@ -15,16 +15,108 @@ import {
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import { Images } from "../../assets/images";
-import { bucket, updateBucket } from "../../redux/action/BucketAction";
+import { updateBucket } from "../../redux/action/BucketAction";
 import { getTimeline } from "../../redux/action/ContentAction";
-import { updateImage } from "../../services/Bucket";
 import { likeOrDislike } from "../../services/Content";
 import { API_URI, BUCKET_URI } from "../../utils/constant";
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
 import Collapsible from "react-collapsible";
+import { BiArchiveIn } from "react-icons/bi";
+import { BsFillBookmarkFill } from "react-icons/bs";
+import { archiveContent, saveContent } from "../../redux/action/AuthActions";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ShareAltOutlined } from "@ant-design/icons";
+import { Checkbox, Row, Col, Input, Typography } from "antd";
+import { io } from "socket.io-client";
+import { useCallback } from "react";
+import {
+  CloseCircleOutlined,
+  ExclamationCircleFilled,
+  WarningOutlined,
+} from "@ant-design/icons";
 
 export default function Content({ content }) {
+  const followerData = useSelector((state) => state.followerReducer.content);
+
+  const socket = io("http://localhost:8080");
+
+  const CheckboxGroup = Checkbox.Group;
+
+  const [checkedFollowers, setCheckedFollowers] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  const handleSelectAll = (e) => {
+    const allUserIds =
+      !isEmpty(followerData?.data) &&
+      followerData?.data?.map((user) => user._id);
+    setCheckedFollowers(e.target.checked ? allUserIds : []);
+    setSelectAll(e.target.checked);
+  };
+
+  const handleCheckboxChange = (checkedValues) => {
+    setCheckedFollowers(checkedValues);
+  };
+
+  const handleSendMsg = async (followersIds) => {
+    console.log({ content });
+    for (const followerId of followersIds) {
+      socket.emit("send-msg", {
+        to: followerId,
+        from: user._id,
+        newMessage: content.image ? content?.image : content?.desc,
+        type: content.image ? "docs" : "text",
+      });
+      await axios.post(`${API_URI}/message/addmsg`, {
+        from: user._id,
+        to: followerId,
+        message: content.image ? content?.image : content?.desc,
+        type: content.image ? "docs" : "text",
+      });
+    }
+  };
+
+  const handleModalOk = () => {
+    console.log("Checked followers:", checkedFollowers);
+    handleSendMsg(checkedFollowers);
+    setshowFollowerPop(false);
+    setCheckedFollowers([]);
+  };
+
+  const handleReasonOk = () => {
+    onConfirm();
+    setreasonPop(false);
+    setReason("");
+  };
+
+  const handleModalCancel = () => {
+    setshowFollowerPop(false);
+  };
+
+  const handleReasonCancel = () => {
+    setreasonPop(false);
+  };
+
+  const followerList =
+    !isEmpty(followerData?.data) &&
+    followerData?.data?.map((follower) => (
+      <Col span={24}>
+        <div
+          style={{
+            backgroundColor: "#F0F1F1",
+            padding: 10,
+            marginBottom: 10,
+            borderRadius: 12,
+          }}
+        >
+          <Checkbox key={follower?._id} value={follower?._id}>
+            {follower?.firstname}
+          </Checkbox>
+        </div>
+      </Col>
+    ));
+
   const videoJsOptions = {
     autoplay: false,
     width: 660,
@@ -38,6 +130,9 @@ export default function Content({ content }) {
   const imageRef = useRef();
   const videoRef = useRef();
   const comment = useRef();
+  const { confirm } = Modal;
+  const { Paragraph, Text } = Typography;
+  const { TextArea } = Input;
 
   const { user } = useSelector((state) => state.authReducer.data);
   const publishloading = useSelector((state) => state.contentReducer.loading);
@@ -54,21 +149,35 @@ export default function Content({ content }) {
   const [commentCount, setCommentCount] = useState(content?.comments?.length);
   const [isCommentOpen, setIsCommentOpen] = useState(false);
   const [comments, setComments] = useState(content?.comments);
+  const [isSaved, setIsSaved] = useState(false);
+  const [isArchived, setIsArchived] = useState(false);
+  const [showFollowerPop, setshowFollowerPop] = useState(false);
+  const [reasonPop, setreasonPop] = useState(false);
+  const [reason, setReason] = useState("");
+
+  useEffect(() => {
+    setIsSaved(user?.savedContents?.includes(content._id));
+    setIsArchived(user?.archiveContents?.includes(content._id));
+  }, [user]);
 
   const onConfirm = () => {
+    const role = user?.isAdmin ? "admin" : "user";
     messageApi.open({
       type: "loading",
       content: "Deleting in progress...",
     });
     axios
-      .delete(`${API_URI}/content/${content._id}`, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("profile")).token
-          }`,
-        },
-      })
+      .delete(
+        `${API_URI}/content/${content._id}/${role}/${reason ? reason : ""}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${
+              JSON.parse(localStorage.getItem("profile")).token
+            }`,
+          },
+        }
+      )
       .then((res) => {
         const payload = {
           id: "",
@@ -82,19 +191,162 @@ export default function Content({ content }) {
           type: "success",
           content: "Content deleted.",
         });
+        setIsSaved((prev) => prev);
       })
       .catch((err) => {
         messageApi.destroy();
       });
   };
 
+  const handleChange = useCallback(
+    (e) => {
+      setReason(e.target.value);
+    },
+    [setReason]
+  );
+
+  const showDeleteConfirm = useCallback(() => {
+    confirm({
+      title: "Are you sure delete this user?",
+      icon: <ExclamationCircleFilled />,
+      content: (
+        <div style={{ marginTop: "1rem" }}>
+          <Paragraph>
+            <WarningOutlined style={{ color: "red" }} /> When a user is deleted,
+            <span style={{ color: "red" }}>
+              all their associated content will be delete!
+            </span>
+          </Paragraph>
+          <div style={{ fontSize: "15px", marginBottom: "5px" }}>Reason</div>
+          <TextArea
+            value={reason}
+            onChange={handleChange}
+            placeholder="Enter the reason"
+            autoSize={{
+              minRows: 3,
+              maxRows: 5,
+            }}
+          />
+        </div>
+      ),
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      closable: true,
+      okButtonProps: {
+        disabled: reason.trim() === "",
+      },
+      onOk() {
+        onConfirm();
+      },
+      onCancel() {
+        console.log("Cancel");
+      },
+    });
+  }, []);
+
+  const saveContentFunction = async () => {
+    const payload = {
+      userId: user?._id,
+      postId: content?._id,
+    };
+    try {
+      await messageApi.open({
+        type: "loading",
+        content: "Saving...",
+      });
+      console.log("dadaadada");
+      await dispatch(saveContent(content?._id, payload));
+      await messageApi.destroy();
+      await messageApi.open({
+        type: "success",
+        content: "Content saved!",
+      });
+      // setIsSaved((prev) => !prev);
+    } catch (error) {
+      await messageApi.destroy();
+      console.log({ error });
+    }
+  };
+
+  const archiveContentFunction = async () => {
+    const payload = {
+      userId: user?._id,
+      postId: content?._id,
+    };
+    const timeline = {
+      id: "",
+      department: "",
+      yearOfStudy: "",
+      loggedInUser: user?._id,
+    };
+    try {
+      await messageApi.open({
+        type: "loading",
+        content: "Saving...",
+      });
+      await dispatch(archiveContent(content?._id, payload));
+      await dispatch(getTimeline(timeline));
+      await messageApi.destroy();
+      await messageApi.open({
+        type: "success",
+        content: "Content archived!",
+      });
+      // setIsArchived((prev) => !prev);
+    } catch (error) {
+      await messageApi.destroy();
+      console.log({ error });
+    }
+  };
+
+  const handleShareClick = () => {
+    setshowFollowerPop(true);
+  };
+
   const items = [
-    {
+    content?.userId === user?._id && {
       label: "Edit",
       key: "1",
       icon: <AiOutlineEdit />,
     },
-    {
+    !user?.isAdmin && {
+      label: (
+        <Popconfirm
+          disabled={isSaved}
+          title="Save the content"
+          description="Are you sure to save this content?"
+          onConfirm={saveContentFunction}
+          okText="Yes"
+          cancelText="No"
+        >
+          {isSaved ? "Saved" : "Save"}
+        </Popconfirm>
+      ),
+      key: "3",
+      icon: <BsFillBookmarkFill />,
+      disabled: isSaved,
+    },
+
+    !user?.isAdmin &&
+      content?.userId === user?._id && {
+        label: (
+          <Popconfirm
+            disabled={isArchived}
+            title="Archive the content"
+            description="Are you sure to archive this content?"
+            onConfirm={archiveContentFunction}
+            okText="Yes"
+            cancelText="No"
+          >
+            {isArchived ? "Archived" : "Archive"}
+          </Popconfirm>
+        ),
+        key: "2",
+        icon: <BiArchiveIn />,
+        disabled: isArchived,
+      },
+
+    content?.userId === user?._id && {
       label: (
         <Popconfirm
           title="Delete the content"
@@ -106,13 +358,27 @@ export default function Content({ content }) {
           Remove
         </Popconfirm>
       ),
-      key: "2",
+      key: "4",
       icon: <AiOutlineDelete />,
+    },
+
+    user?.isAdmin && {
+      label: "Remove",
+      key: "6",
+      icon: <AiOutlineDelete />,
+    },
+    !user?.isAdmin && {
+      // content?.userId === user?._id &&
+      label: "Share",
+      key: "5",
+      icon: <ShareAltOutlined />,
     },
   ];
 
   const handleMenuClick = (e) => {
     if (e.key === "1") setIsVisible(true);
+    if (e.key === "5") handleShareClick();
+    if (e.key === "6") setreasonPop(true);
   };
 
   const menuProps = {
@@ -126,9 +392,6 @@ export default function Content({ content }) {
     setContentVideo(BUCKET_URI + content?.video);
   };
 
-  const handleCommentOpen = () => {
-    setIsCommentVisible(true);
-  };
   const handleCommentClose = () => {
     setIsCommentVisible(false);
   };
@@ -284,6 +547,15 @@ export default function Content({ content }) {
     setIsCommentOpen(!isCommentOpen);
   };
 
+  function isValidUrl(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   return (
     <div className="Post">
       {contextHolder}
@@ -292,33 +564,59 @@ export default function Content({ content }) {
           <img
             className="post-user-profile"
             src={
-              content.users.profilePicture
-                ? BUCKET_URI + content.users.profilePicture
+              content?.users?.profilePicture
+                ? BUCKET_URI + content.users?.profilePicture
                 : Images.DEFAULT_PROFILE
             }
             alt="profile"
           />
           <div className="post-user-details">
-            <span className="post-username">{content.users.username}</span>
+            <Link
+              target="_blank"
+              to={`/profile/${content?.users?._id}`}
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                cursor: "pointer",
+              }}
+            >
+              <span className="post-username">
+                {content?.users?.username}{" "}
+                {content?.users?.studentType === "alumniStudent" && (
+                  <span>🎓</span>
+                )}
+              </span>
+            </Link>
             <span className="post-time">
               {moment(content.createdAt).fromNow()}
             </span>
           </div>
         </div>
-        {content?.userId === user?._id && (
+        {
           <div>
             <Dropdown
               menu={menuProps}
               trigger={["click"]}
-              placement="topRight"
+              placement="bottomRight"
               arrow
             >
               <FiMoreHorizontal className="MoreOption" />
             </Dropdown>
           </div>
-        )}
+        }
       </div>
-      {content.desc && <span className="post-desc">{content.desc}</span>}
+      {content.desc && (
+        <span className="post-desc">
+          {isValidUrl(content.desc) ? (
+            <a href={content.desc} target="_blank" rel="noopener noreferrer">
+              {content.desc}
+            </a>
+          ) : (
+            content.desc
+          )}
+        </span>
+      )}
+
       {content.image && (
         <img src={BUCKET_URI + content.image} alt="Timeline Content" />
       )}
@@ -333,13 +631,6 @@ export default function Content({ content }) {
           ]}
         />
       )}
-
-      {/* <div onClick={handleCommentOpen} className="CommentRow">
-          <div className="postReact">
-            <AiOutlineComment style={{ cursor: "pointer" }} size={24} />
-          </div>
-          <span className="like-text">{commentCount} Comments</span>
-        </div> */}
 
       <Collapsible
         trigger={
@@ -542,6 +833,55 @@ export default function Content({ content }) {
             </div>
           ))
         )}
+      </Modal>
+
+      <Modal
+        title="Share post with followers"
+        open={showFollowerPop}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+      >
+        <div style={{ marginBottom: "1rem", fontWeight: "bolder" }}>
+          Followers List
+        </div>
+
+        <Checkbox
+          checked={selectAll}
+          onChange={handleSelectAll}
+          style={{ marginBottom: "1rem", marginLeft: "0.6rem" }}
+        >
+          All users
+        </Checkbox>
+        <br />
+        <CheckboxGroup onChange={handleCheckboxChange} value={checkedFollowers}>
+          <Row>{followerList}</Row>
+        </CheckboxGroup>
+      </Modal>
+
+      <Modal
+        title="Remove content"
+        open={reasonPop}
+        onOk={handleReasonOk}
+        onCancel={handleReasonCancel}
+      >
+        <div style={{ marginTop: "1rem" }}>
+          {/* <Paragraph>
+            <WarningOutlined style={{ color: "red" }} /> When a user is deleted,
+            <span style={{ color: "red" }}>
+              all their associated content will be delete!
+            </span>
+          </Paragraph> */}
+          <div style={{ fontSize: "15px", marginBottom: "5px" }}>Reason</div>
+          <TextArea
+            value={reason}
+            onChange={handleChange}
+            placeholder="Enter the reason"
+            autoSize={{
+              minRows: 3,
+              maxRows: 5,
+            }}
+          />
+        </div>
       </Modal>
     </div>
   );
