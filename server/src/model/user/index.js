@@ -37,6 +37,7 @@ const UserSchema = mongoose.Schema(
     course: {
       type: String,
       require: false,
+      default: "",
     },
     isAdmin: {
       type: Boolean,
@@ -45,10 +46,12 @@ const UserSchema = mongoose.Schema(
     yearOfStudy: {
       type: String,
       require: false,
+      default: "",
     },
     specialization: {
       type: String,
       require: false,
+      default: "",
     },
     accountType: {
       type: String,
@@ -60,8 +63,47 @@ const UserSchema = mongoose.Schema(
       require: false,
     },
     profilePicture: String,
-    followers: [],
-    following: [],
+    followers: [
+      { type: mongoose.Types.ObjectId, ref: "Users", require: false },
+    ],
+    following: [
+      { type: mongoose.Types.ObjectId, ref: "Users", require: false },
+    ],
+    followRequests: [
+      { type: mongoose.Types.ObjectId, ref: "Users", require: false },
+    ],
+    savedContents: [
+      { type: mongoose.Types.ObjectId, ref: "Contents", require: false },
+    ],
+    archiveContents: [
+      { type: mongoose.Types.ObjectId, ref: "Contents", require: false },
+    ],
+    isVerified: {
+      type: Boolean,
+      require: true,
+      default: false,
+    },
+    studentType: {
+      type: String,
+      require: true,
+    },
+
+    studentId: {
+      type: String,
+      require: false,
+    },
+    company: {
+      type: String,
+      require: false,
+    },
+    designation: {
+      type: String,
+      require: false,
+    },
+    experience: {
+      type: String,
+      require: false,
+    },
   },
   { timestamps: true }
 );
