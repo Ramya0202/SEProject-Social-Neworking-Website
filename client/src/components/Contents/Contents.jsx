@@ -58,6 +58,7 @@ const Contents = () => {
       {loading ? (
         <Spin tip="Loading" />
       ) : (
+        content &&
         content?.map((post, id) => {
           return <Content content={post} key={id} />;
         })
