@@ -1,5 +1,6 @@
 import * as Api from "../../services/Auth";
 import * as UserAPi from "../../services/User";
+import * as ContentAPI from "../../services/Content";
 import { toast } from "react-toastify";
 import {
   NotificationContainer,
@@ -11,7 +12,7 @@ export const logIn = (formData, navigate) => async (dispatch) => {
   try {
     const { data } = await Api.logIn(formData);
     dispatch({ type: "LOGIN_SUCCESS", data: data });
-    NotificationManager.success("Login Successfully", "Success!");
+    if (data) NotificationManager.success("Login Successfully", "Success!");
   } catch (error) {
     dispatch({ type: "LOGIN_FAIL" });
     NotificationManager.error(error?.response?.data, "Warning");
@@ -19,13 +20,16 @@ export const logIn = (formData, navigate) => async (dispatch) => {
 };
 
 export const register = (formData, navigate) => async (dispatch) => {
-  dispatch({ type: "LOGIN_START" });
+  dispatch({ type: "REGISTER_START" });
   try {
     const { data } = await Api.signUp(formData);
-    dispatch({ type: "LOGIN_SUCCESS", data: data });
-    NotificationManager.success("Registration Successfully", "Success!");
+    dispatch({ type: "REGISTER_SUCCESS", data: data });
+    NotificationManager.success(
+      "Verification mail sent. Please check your inbox",
+      "Success!"
+    );
   } catch (error) {
-    dispatch({ type: "LOGIN_FAIL" });
+    dispatch({ type: "REGISTER_FAIL" });
     NotificationManager.error(error?.response?.data?.message, "Warning");
   }
 };
@@ -41,13 +45,23 @@ export const updateUser = (id, formData) => async (dispatch) => {
 };
 
 export const follow = (id, data) => async (dispatch) => {
-  dispatch({ type: "FOLLOW", data: id });
+  dispatch({ type: "FOLLOW", data: data });
   UserAPi.follow(id, data);
 };
 
 export const unfollow = (id, data) => async (dispatch) => {
-  dispatch({ type: "UNFOLLOW", data: id });
+  dispatch({ type: "UNFOLLOW", data: data });
   UserAPi.unfollow(id, data);
+};
+export const saveContent = (id, data) => async (dispatch) => {
+  console.log("-------------");
+  dispatch({ type: "SAVE_CONTENT", data: id });
+  ContentAPI.saveContent(data);
+};
+
+export const archiveContent = (id, data) => async (dispatch) => {
+  dispatch({ type: "ARCHIVE_CONTENT", data: id });
+  ContentAPI.archiveContent(data);
 };
 
 export const logout = () => async (dispatch) => {

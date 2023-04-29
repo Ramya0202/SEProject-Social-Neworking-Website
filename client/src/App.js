@@ -1,7 +1,9 @@
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { Authentication, Dashboard } from "./pages";
+import ChatScreen from "./components/ChatScreen/ChatScreen";
+import { Authentication, Dashboard, ResetPassword } from "./pages";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const token = useSelector((state) => state.authReducer.data);
@@ -23,9 +25,22 @@ function App() {
           path="/home"
           element={token ? <Dashboard /> : <Navigate to="../auth" />}
         />
+
+        <Route
+          path="/chat"
+          element={token ? <ChatScreen /> : <Navigate to="../auth" />}
+        />
         <Route
           path="/auth"
           element={token ? <Navigate to="../home" /> : <Authentication />}
+        />
+        <Route
+          path="/profile/:id"
+          element={token ? <Profile /> : <Navigate to="../auth" />}
+        />
+        <Route
+          path="/reset-password/:userId/:uniqString"
+          element={token ? <Navigate to="../home" /> : <ResetPassword />}
         />
       </Routes>
     </div>

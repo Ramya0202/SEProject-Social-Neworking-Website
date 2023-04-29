@@ -19,7 +19,6 @@ export const createContent = (data) => async (dispatch) => {
     dispatch({ type: "UPLOAD_FAIL" });
   }
 };
-
 export const openFilterModal = (isOpen) => async (dispatch) => {
   dispatch({ type: "IS_OPEN_MODAL", isOpen: isOpen });
 };
