@@ -1,7 +1,7 @@
 import * as UserAPi from "../../services/User";
 
 export const listAllFollowers = (id) => async (dispatch) => {
-  dispatch({ type: "LIST_ALL_FOLLOWERS_START" });
+  dispatch({ type: "LIST_ALL_FOLLOWERS_START" }); //List of followers
   try {
     const data = await UserAPi.getAllFollowerById(id);
     console.log({ data });
