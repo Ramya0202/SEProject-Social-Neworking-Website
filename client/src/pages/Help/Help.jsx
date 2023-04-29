@@ -45,6 +45,31 @@ export default function HelpModal({ visible, onCancel }) {
   };
 
   return (
-   
+      <Modal
+          visible={visible}
+          onCancel={onCancel}
+          okButtonProps={{
+              disabled: question.trim() === "",
+          }}
+          okText="Send"
+          onOk={handleSubmit}
+      >
+          <Result
+              status="404"
+              title="uconnect.albany@gmail.com"
+              subTitle="Get in touch and let us know how we can help."
+          />
+          <div style={{ fontSize: "15px", marginBottom: "5px" }}>Question</div>
+          <TextArea
+              value={question}
+              onChange={handleChange}
+              placeholder="How can we help you?"
+              autoSize={{
+                  minRows: 4,
+                  maxRows: 6,
+              }}
+              style={{ marginBottom: "1rem" }}
+          />
+      </Modal>
   );
 }
