@@ -9,35 +9,45 @@ import { Col, Modal, Row, Select, Spin } from "antd";
 import { getTimeline, openFilterModal } from "../../redux/action/ContentAction";
 import { Button, Drawer, Radio, Space } from "antd";
 import { DEPARTMENT, YEAR_OF_STUDY } from "../../utils/constant";
+import { getUser } from "../../services/User";
 
-const Contents = () => {
+const PersonalContents = () => {
   const { Option } = Select;
 
   const [department, setDepartment] = useState();
   const [yearOfStudy, setYearOfStudy] = useState();
+  const [user, setuser] = useState({});
 
   const dispatch = useDispatch();
+  const { id } = useParams();
+
+  console.log({ id });
+
+  const listUserbyUserId = async () => {
+    try {
+      const { data } = await getUser(id);
+      setuser(data);
+      const payload = {
+        id: "",
+        department: "",
+        yearOfStudy: "",
+        loggedInUser: data?._id,
+      };
+      dispatch(getTimeline(payload));
+      console.log({ data });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   let { content, loading, isOpen } = useSelector(
     (state) => state.contentReducer
   );
-  const user = useSelector((state) => state.authReducer.data?.user);
 
   useEffect(() => {
-    const payload = {
-      id: "",
-      department: "",
-      yearOfStudy: "",
-      loggedInUser: user?._id,
-    };
-    dispatch(getTimeline(payload));
+    listUserbyUserId();
   }, []);
 
-  // const showDrawer = () => {
-  //   setOpen(true);
-  // };
-  // const onChange = (e) => {
-  //   setPlacement(e.target.value);
-  // };
   const onClose = () => {
     dispatch(openFilterModal(false));
   };
@@ -108,4 +118,4 @@ const Contents = () => {
   );
 };
 
-export default Contents;
+export default PersonalContents;
