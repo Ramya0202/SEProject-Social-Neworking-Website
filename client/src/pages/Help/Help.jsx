@@ -30,6 +30,7 @@ export default function HelpModal({ visible, onCancel }) {
     dispatch(openHelpModal(false));
   };
 
+  //submit-handler
   const handleSubmit = async () => {
     const payload = {
       firstname: user?.firstname,
