@@ -5,7 +5,12 @@ import RightContainer from "../../components/RightContainer/RightContainer";
 import PersonalFilter from "../../components/PersonalFilter/PersonalFilter";
 import PersonalContentContainer from "../../components/PersonalContentContainer/PersonalContentContainer";
 const Profile = () => {
-  return (
+    return (
+        <div className="Profile">
+            <PersonalFilter location="profilePage" />
+            <PersonalContentContainer />
+            <RightContainer />
+        </div>
    
   );
 };
