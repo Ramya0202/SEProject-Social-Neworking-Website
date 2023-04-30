@@ -29,7 +29,7 @@ import {
 import { MdDownloadForOffline } from "react-icons/md";
 import { BsCloudDownload } from "react-icons/bs";
 
-const socket = io("http://localhost:8080");
+const socket = io("http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080");
 
 const ChatBox = ({ chat, currentUser, setSendMessage, online }) => {
   const [messages, setMessages] = useState([]);
@@ -152,7 +152,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, online }) => {
     formData.append("file", files[0]);
 
     axios
-      .post("http://localhost:8080/api/chat/uploadfiles", formData, config)
+      .post("http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080/api/chat/uploadfiles", formData, config)
       .then((response) => {
         if (response.data.success) {
           setNewMessage(response.data.url);
