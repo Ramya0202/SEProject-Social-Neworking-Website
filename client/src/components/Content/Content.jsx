@@ -40,7 +40,7 @@ import {
 export default function Content({ content }) {
   const followerData = useSelector((state) => state.followerReducer.content);
 
-  const socket = io("http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080");
+  const socket = io("http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080");
 
   const CheckboxGroup = Checkbox.Group;
 
