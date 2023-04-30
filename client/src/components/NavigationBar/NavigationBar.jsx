@@ -35,7 +35,7 @@ export default function NavigationBar() {
 
   console.log({ notify });
 
-  const socket = io("http://localhost:8080", {
+  const socket = io("http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080", {
     query: { userId: userAuth?.user?._id },
   });
 

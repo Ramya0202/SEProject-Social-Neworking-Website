@@ -1,4 +1,4 @@
-const API_URI = "http://localhost:8080";
+const API_URI = "http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080";
 const BUCKET_URI = `${API_URI}/images/`;
 const METHOD = {
   GET: "get",

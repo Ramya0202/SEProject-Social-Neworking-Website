@@ -10,7 +10,7 @@ import axios from "axios";
 import { API_URI } from "../../utils/constant";
 import _ from "lodash";
 
-const socket = io("http://localhost:8080");
+const socket = io("http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080");
 
 const ChatContainer = () => {
   const { user } = useSelector((state) => state.authReducer.data);
