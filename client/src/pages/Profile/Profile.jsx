@@ -6,7 +6,11 @@ import PersonalFilter from "../../components/PersonalFilter/PersonalFilter";
 import PersonalContentContainer from "../../components/PersonalContentContainer/PersonalContentContainer";
 const Profile = () => {
   return (
-   
+    <div className="Profile">
+      <PersonalFilter location="profilePage" />
+      <PersonalContentContainer />
+      <RightContainer />
+    </div>
   );
 };
 
