@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f3939b5a.css",
+    "main.js": "/static/js/main.704607bf.js",
+    "static/js/787.c4976c12.chunk.js": "/static/js/787.c4976c12.chunk.js",
+    "static/media/png": "/static/media/1e7b63404cd2fb8e6525b2fd4ee4d286.b0275d38b7b78d6dd461.png",
+    "static/media/logo-student.png": "/static/media/logo-student.6620acaf43802d63128b.png",
+    "static/media/logo3.png": "/static/media/logo3.df594143ecb69071806a.png",
+    "static/media/logo-alumni.png": "/static/media/logo-alumni.368df36ee15e4b71545e.png",
+    "static/media/login-logo.png": "/static/media/login-logo.a5b2c98b9b66c59036e2.png",
+    "static/media/avatar.png": "/static/media/avatar.3928376446b38493477f.png",
+    "static/media/image-editing.png": "/static/media/image-editing.e92cb4136869a7ca7fef.png",
+    "static/media/notification.svg?s3g3t9": "/static/media/notification.5d0158671dd860c714c4.svg",
+    "static/media/notification.eot": "/static/media/notification.3657084dc0419605a91c.eot",
+    "static/media/notification.woff?s3g3t9": "/static/media/notification.c392cd33d9d9de730f9d.woff",
+    "static/media/notification.ttf?s3g3t9": "/static/media/notification.c5d9251ea82e42f75381.ttf",
+    "index.html": "/index.html",
+    "main.f3939b5a.css.map": "/static/css/main.f3939b5a.css.map",
+    "main.704607bf.js.map": "/static/js/main.704607bf.js.map",
+    "787.c4976c12.chunk.js.map": "/static/js/787.c4976c12.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f3939b5a.css",
+    "static/js/main.704607bf.js"
+  ]
+}
