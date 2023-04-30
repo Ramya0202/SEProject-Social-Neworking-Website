@@ -7,11 +7,7 @@ import { API_URI, BUCKET_URI } from "../../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { Images } from "../../assets/images";
 import { io } from "socket.io-client";
-import {
-  AiOutlineClose,
-  AiOutlineCloseCircle,
-  AiOutlineDownload,
-} from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { openChatBox } from "../../redux/action/MessageAction";
 import {
   Direction,
@@ -24,9 +20,7 @@ import {
   CameraOutlined,
   SendOutlined,
   FilePdfOutlined,
-  DownloadOutlined,
 } from "@ant-design/icons";
-import { MdDownloadForOffline } from "react-icons/md";
 import { BsCloudDownload } from "react-icons/bs";
 
 const socket = io("http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080");
@@ -199,7 +193,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, online }) => {
         >
           <BsCloudDownload style={{ fontSize: 20, marginRight: 5 }} />
           {data?.message?.split("_")[1]}{" "}
-          {/* <DownloadOutlined style={{ fontSize: 16 }} /> */}
         </a>
       ) : (
         <>
@@ -288,21 +281,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, online }) => {
             </div>
             {/* chat-sender */}
             <div className="chat-sender">
-              {/* <div
-              //  onClick={() => imageRef.current.click()}
-              > */}
-              {/* <Dropzone onDrop={onDrop}>
-                {({ getRootProps, getInputProps }) => (
-                  <section>
-                    <div {...getRootProps()}>
-                      <input {...getInputProps()} />
-                      <Button>
-                        <Icon type="upload" />
-                      </Button>
-                    </div>
-                  </section>
-                )}
-              </Dropzone> */}
               <FloatingGroup size={Size.SMALL} direction={Direction.TOP}>
                 <FloatMenuItemButton
                   icon={

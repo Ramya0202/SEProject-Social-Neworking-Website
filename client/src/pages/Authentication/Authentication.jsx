@@ -98,25 +98,6 @@ const Authentication = () => {
       ) {
         setConfirmPass(false);
       }
-      // else if (
-      //   data.password === data.confirmpass &&
-      //   isPasswordValid &&
-      //   !isValidEmail
-      // ) {
-      //   setIsValidEmail(false);
-      // } else if (
-      //   data.password !== data.confirmpass &&
-      //   isPasswordValid &&
-      //   !isValidEmail
-      // ) {
-      //   setIsValidEmail(false);
-      // } else if (
-      //   data.password === data.confirmpass &&
-      //   !isPasswordValid &&
-      //   !isValidEmail
-      // ) {
-      //   setIsValidEmail(false);
-      // }
     } else {
       dispatch(logIn(data, navigate));
     }
