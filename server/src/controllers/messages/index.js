@@ -33,7 +33,7 @@ export const addMessage = async (req, res, next) => {
       type: type,
     });
 
-    if (data) return res.json({ msg: "Message added successfully." });
+    if (data) return res.json({ msg: "Message added successfully." }); //Returns the message 
     else return res.json({ msg: "Failed to add message to the database" });
   } catch (ex) {
     next(ex);
