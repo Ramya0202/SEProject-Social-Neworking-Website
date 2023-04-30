@@ -7,19 +7,14 @@ import { Typography, message, Modal, Input } from "antd";
 import { deleteUser } from "../../services/User";
 import { listAllSuggestedPerson } from "../../redux/action/SuggestedPersonAction";
 import { getTimeline } from "../../redux/action/ContentAction";
-import {
-  CloseCircleOutlined,
-  ExclamationCircleFilled,
-  WarningOutlined,
-} from "@ant-design/icons";
+import { WarningOutlined } from "@ant-design/icons";
 
 function ActiveUsers({ follower, idx }) {
   console.log({ follower });
   const user = useSelector((state) => state.authReducer.data).user;
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
-  const { confirm } = Modal;
-  const { Paragraph, Text } = Typography;
+  const { Paragraph } = Typography;
   const { TextArea } = Input;
 
   const [reason, setReason] = useState("");

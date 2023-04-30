@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import "./style.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-// import { logIn, register } from "../../rtk/authSlice";
 import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { Images } from "../../assets/images";
-import { logIn, register } from "../../redux/action/AuthActions";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { resetPassword } from "../../services/User";
@@ -24,13 +21,12 @@ const ResetPassword = () => {
     confirmpass: "",
   };
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [data, setData] = useState(initialState);
   const [confirmPass, setConfirmPass] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidEmail] = useState(true);
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
