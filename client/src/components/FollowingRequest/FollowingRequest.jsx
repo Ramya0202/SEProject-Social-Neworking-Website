@@ -70,48 +70,48 @@ export default function FollowingRequest({
 
   return (
     <div
-      key={idx}
-      style={{
-        marginBottom: "1rem",
-        marginTop: "1rem",
-      }}
-      className="follower"
-    >
-      {contextHolder}
-      <div>
-        <img
-          src={
-            follower.profilePicture
-              ? BUCKET_URI + follower.profilePicture
-              : Images.DEFAULT_PROFILE
-          }
-          alt="profile"
-          className="followerImage"
-        />
-        <div className="name">
-          <span>
-            {follower.firstname}{" "}
-            {follower?.accountType === "private" && <HiLockClosed />}{" "}
-          </span>
-          <span>@{follower.username}</span>
-        </div>
-      </div>
-      <div style={{ justifyContent: "flex-end" }}>
-        <button
-          onClick={handleRequestStatus}
-          className={"button fc-button"}
-          style={{ width: "38%", fontSize: "0.75rem" }}
-        >
-          Accept
-        </button>
-        <button
-          onClick={handleReject}
-          className={"button fc-button"}
-          style={{ width: "38%", fontSize: "0.75rem" }}
-        >
-          Reject
-        </button>
-      </div>
+          key={idx}
+          style={{
+              marginBottom: "1rem",
+              marginTop: "1rem",
+          }}
+          className="follower"
+      >
+          {contextHolder}
+          <div>
+              <img
+                  src={
+                      follower.profilePicture
+                          ? BUCKET_URI + follower.profilePicture
+                          : Images.DEFAULT_PROFILE
+                  }
+                  alt="profile"
+                  className="followerImage"
+              />
+              <div className="name">
+                  <span>
+                      {follower.firstname}{" "}
+                      {follower?.accountType === "private" && <HiLockClosed />}{" "}
+                  </span>
+                  <span>@{follower.username}</span>
+              </div>
+          </div>
+          <div style={{ justifyContent: "flex-end" }}>
+              <button
+                  onClick={handleRequestStatus}
+                  className={"button fc-button"}
+                  style={{ width: "38%", fontSize: "0.75rem" }}
+              >
+                  Accept
+              </button>
+              <button
+                  onClick={handleReject}
+                  className={"button fc-button"}
+                  style={{ width: "38%", fontSize: "0.75rem" }}
+              >
+                  Reject
+              </button>
+          </div>
     </div>
   );
 }
