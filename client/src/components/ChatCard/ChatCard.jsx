@@ -12,7 +12,7 @@ const ChatCard = (props) => {
       message.substring(message.length - 3, message.length) === "mp4" ? (
         <video
           style={{ maxWidth: "200px" }}
-          src={`http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080/${message}`}
+          src={`http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080/${message}`}
           alt="video"
           type="video/mp4"
           controls
@@ -20,7 +20,7 @@ const ChatCard = (props) => {
       ) : (
         <img
           style={{ maxWidth: "200px" }}
-          src={`http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080/${message}`}
+          src={`http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080/${message}`}
           alt="img"
         />
       )

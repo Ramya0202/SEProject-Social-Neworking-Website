@@ -19,7 +19,7 @@ const ChatScreen = ({ chats }) => {
   const socketRef = useRef();
 
   useEffect(() => {
-    const server = "http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080";
+    const server = "http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080";
 
     dispatch(getChats());
 
@@ -65,7 +65,7 @@ const ChatScreen = ({ chats }) => {
     formData.append("file", files[0]);
 
     Axios.post(
-      "http://ec2-3-27-136-167.ap-southeast-2.compute.amazonaws.com:8080/api/chat/uploadfiles",
+      "http://ec2-3-26-22-48.ap-southeast-2.compute.amazonaws.com:8080/api/chat/uploadfiles",
       formData,
       config
     ).then((response) => {
